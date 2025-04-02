@@ -43,13 +43,14 @@ export class AuthComponent {
           console.log(response);
           console.log('response.body.token: ', response.body.token);
           localStorage.setItem('jwtToken', response.body.token);
+          this.authService.jwtToken = response.body.token;
           this.messageService.add({ severity: 'success', summary: '¡Bienvenido!', detail: 'Ingresando al inventario', life: 3000 });
           // * el settimeout es para simular una carga de 1 segundo y mostrar mensaje, pero realmente no es necesario
           setTimeout
             (() => {
               this.router.navigate(['/inventario']);
               this.messageService.clear();
-            }, 1000);
+            }, 2000);
         },
         error: (error: HttpErrorResponse) => {
           this.messageService.add({ severity: 'error', summary: 'Error al iniciar sesión', detail: error.error, life: 3000 });

@@ -16,7 +16,8 @@ export class AuthService {
   private httpClient: HttpClient = inject(HttpClient);
   private urlApi = environment.apiUrl;
   private loginEndPoints = loginEndPoints;
-  jwtToken = localStorage.getItem('jwtToken');
+  public jwtToken = localStorage.getItem('jwtToken');
+
 
   constructor() { }
 

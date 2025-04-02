@@ -6,6 +6,8 @@ import { routes } from './app.routes';
 import Aura from '@primeng/themes/aura';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
+import { JwtHelperService, JwtModule } from '@auth0/angular-jwt';
+import { jwtOptionsProvider } from './core/services/auth/auth.config';
 
 
 export const appConfig: ApplicationConfig = {
@@ -13,6 +15,8 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideAnimationsAsync(),
+    jwtOptionsProvider,
+    { provide: JwtHelperService, useClass: JwtHelperService },
     provideHttpClient((withInterceptors([authInterceptor]))),
     providePrimeNG({
       theme: {
