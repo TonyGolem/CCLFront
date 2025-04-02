@@ -10,6 +10,7 @@ import { ToastModule } from 'primeng/toast';
 import { formGroupValidatorLogin } from '../../../models/auth/auth.interfaces';
 import { AuthService } from '../../../services/auth/auth.service';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-auth',
@@ -22,11 +23,12 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 export class AuthComponent {
 
+  router: Router = inject(Router)
   authService: AuthService = inject(AuthService);
 
   loginForm: FormGroup<formGroupValidatorLogin> = new FormGroup<formGroupValidatorLogin>({
-    usuario: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
-    clave: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.minLength(4)] })
+    username: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+    password: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.minLength(4)] })
   })
 
   constructor(private messageService: MessageService) { }
@@ -39,9 +41,18 @@ export class AuthComponent {
       this.authService.login(this.loginForm).subscribe({
         next: (response) => {
           console.log(response);
+          console.log('response.body.token: ', response.body.token);
+          localStorage.setItem('jwtToken', response.body.token);
+          this.messageService.add({ severity: 'success', summary: '¡Bienvenido!', detail: 'Ingresando al inventario', life: 3000 });
+          // * el settimeout es para simular una carga de 1 segundo y mostrar mensaje, pero realmente no es necesario
+          setTimeout
+            (() => {
+              this.router.navigate(['/inventario']);
+              this.messageService.clear();
+            }, 1000);
         },
         error: (error: HttpErrorResponse) => {
-          this.messageService.add({ severity: 'error', summary: 'Error al iniciar sesión', detail: error.message, life: 3000 });
+          this.messageService.add({ severity: 'error', summary: 'Error al iniciar sesión', detail: error.error, life: 3000 });
           console.log(error);
         }
       })
