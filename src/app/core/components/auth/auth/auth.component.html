@@ -1,1 +1,28 @@
-<p>auth works!</p>
+<div class="flex justify-content-center align-items-center h-100 mt-5">
+  <p-card class="login-card">
+    <ng-template #header>
+      <h2 class="text-center">Iniciar Sesión en CCL</h2>
+    </ng-template>
+
+    <form [formGroup]="loginForm">
+      <div class="flex flex-column align-items-center">
+        <div class="m-2">
+          <p-floatlabel>
+            <input pInputText id="user" formControlName="usuario" />
+            <label for="user">Usuario</label>
+          </p-floatlabel>
+        </div>
+
+        <div class="m-2">
+          <p-password [toggleMask]="true" [feedback]="false" formControlName="clave" />
+        </div>
+
+        <div class="m-2">
+          <p-button label="Iniciar Sesión" icon="pi pi-sign-in" class="p-button-primary"
+            [disabled]="!loginForm.valid" (click)="login()"></p-button>
+        </div>
+      </div>
+    </form>
+  </p-card>
+</div>
+<p-toast />
