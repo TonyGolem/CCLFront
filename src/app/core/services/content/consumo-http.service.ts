@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { environment } from '../../../../environments/environments';
 import { Observable } from 'rxjs';
 import { ConsumoGeneralEndPoints } from '../../../../environments/consumoGeneralEndPoints';
-import { infoInventario } from '../../models/content/inventario.interfaces';
+import { infoInventario, infoRegistrarMovimiento } from '../../models/content/inventario.interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +18,11 @@ export class ConsumoHTTPService {
   constructor() { }
 
 
-  obtenerInventario(): Observable<HttpResponse<infoInventario>> {
-    return this.httpClient.get<infoInventario>(this.urlApi + this.consumoGeneralEndPoints.obtenerInventario, { observe: 'response' });
+  obtenerInventario(): Observable<HttpResponse<infoInventario[]>> {
+    return this.httpClient.get<infoInventario[]>(this.urlApi + this.consumoGeneralEndPoints.obtenerInventario, { observe: 'response' });
+  }
+
+  registrarMovimiento(movimiento: infoRegistrarMovimiento): Observable<HttpResponse<any>> {
+    return this.httpClient.post<any>(this.urlApi + this.consumoGeneralEndPoints.registrarMovimiento, movimiento, { observe: 'response' });
   }
 }

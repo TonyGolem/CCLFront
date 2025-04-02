@@ -1,2 +1,99 @@
-<p>inventario works!</p>
 <p-toast />
+<p-confirmdialog />
+
+<h1 class="text-center">Listado y gestión de inventario</h1>
+
+<div class=" card mt-5">
+  <p-table #dt [value]="listadoInventario" class="mt-5" [rows]="10" [paginator]="true" [globalFilterFields]="[
+  'idproducto',
+  'nombreproducto',
+  'cantidadproducto',
+]" [tableStyle]="{ 'min-width': '50rem' }" [rowHover]="true" dataKey="id"
+    currentPageReportTemplate="mostrando {first} a {last} de {totalRecords} elementos del inventario."
+    [showCurrentPageReport]="true">
+    <ng-template pTemplate="caption">
+      <div class="flex align-items-center justify-content-between">
+        <h5 class="m-0">Listado de inventario.</h5>
+        <span class="p-input-icon-left">
+          <i class="pi pi-search"></i>
+          <input pInputText type="text" (input)="applyFilterGlobal($event, 'contains')"
+            placeholder="Buscar en el listado..." />
+        </span>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="idproducto" style="min-width: 15rem">
+          ID del producto<p-sortIcon field="idproducto" />
+        </th>
+        <th pSortableColumn="nombreproducto" style="min-width: 15rem">
+          Nombre del producto: <p-sortIcon field="nombreproducto" />
+        </th>
+
+        <th pSortableColumn="cantidadproducto" style="min-width: 10rem">
+          cantidad registrada <p-sortIcon field="cantidadproducto" />
+        </th>
+
+        <th pSortableColumn="inventoryStatus" style="min-width: 10rem">
+          Registrar movimiento <p-sortIcon field="inventoryStatus" />
+        </th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-elemento>
+      <tr>
+        <td>
+          {{ elemento.idproducto }}
+        </td>
+        <td>
+          {{ elemento.nombreproducto }}
+        </td>
+
+        <td>
+          {{ elemento.cantidadproducto}} elementos.
+        </td>
+
+        <td>
+          <p-button pRipple icon="pi pi-plus" pTooltip="Ingresar elementos" class="m-1 mr-2" [rounded]="true"
+            [outlined]="true" severity="success" (click)="cambiarEstadoDialog('entrada', true, elemento)" />
+
+          <p-button pRipple icon="pi pi-minus" pTooltip="retirar elementos" class="m-1 mr-2" [rounded]="true"
+            [outlined]="true" severity="danger" (click)="cambiarEstadoDialog('salida', true, elemento)" />
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+
+  <p-dialog [(visible)]="MovimientoDialog" [style]="{ width: '950px' }" header="Registrar movimiento" [modal]="true"
+    styleClass="p-fluid" closable="false">
+    <ng-template pTemplate="content">
+      <form [formGroup]="formGroupRegistrarMovimiento">
+        <div class="formgrid grid">
+          <div class="field col">
+            <h5>ID del elemento</h5>
+            <input type="text" pInputText formControlName="idproducto" readonly="true" />
+          </div>
+          <div class="field col">
+            <h5>Nombre del elemento</h5>
+            <input type="text" pInputText formControlName="nombreproducto" readonly="true" />
+          </div>
+
+          <div class="field col">
+            <h5>N° de elementos a registrar {{tipoMovimiento}}/s</h5>
+            <p-inputnumber inputId="integeronly" formControlName="cantidadproducto" />
+          </div>
+        </div>
+      </form>
+
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+      <p-button pRipple severity="danger" label="Cancelar" (onClick)="confirmarCierreCreacionElementos()"
+        icon="pi pi-times" />
+      <p-button pRipple label="Guardar" icon="pi pi-check" [disabled]="!formGroupRegistrarMovimiento.valid"
+        (click)="modificarElemento()" />
+    </ng-template>
+  </p-dialog>
+
+</div>
